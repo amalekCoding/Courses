@@ -1,0 +1,26 @@
+const
+BLABLA=
+10;
+
+const BLABLA=-10;
+const BLABLA = +10;
+const BLABLA = 'a';
+const BLABLA = '\n';
+const BLABLA = '\'';
+
+int var;
+int var[12];
+
+int var;
+char var;
+char var[25][3];
+
+int valeur(int a, int b, int c, int x) {
+	;
+	var[2][4] = 'u';
+
+	if(!0)
+	{
+		return a*x*x+b*x+c;
+	}
+}
