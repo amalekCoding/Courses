@@ -1,0 +1,41 @@
+<project name="roto" default="build_jar" basedir=".">
+	
+	
+	<path id="classpath">
+		<pathelement location="${basedir}/lib/zen5.jar"/>
+	</path>
+
+	
+	
+	<!-- =================================================================== -->
+	<!-- Compile the project                         		     -->
+	<!-- =================================================================== -->
+	<target name="compile">
+        <javac classpathref="classpath" includeantruntime="true" srcdir="${basedir}/src" destdir="${basedir}/classes"/>
+   </target>
+	
+	
+	<!-- =================================================================== -->
+	<!-- Clean the project                         		     -->
+	<!-- =================================================================== -->
+	<target name="clean" description="Delete all the generated files." >
+		<delete includeemptydirs="true">
+			<fileset dir="${basedir}/classes" includes="**/*"/>
+		</delete>
+        <delete file="rotofight.jar"/>
+	</target>
+	
+	
+	<!-- =================================================================== -->
+	<!-- Generation of the jar                         		   -->
+	<!-- =================================================================== -->
+	<target name="build_jar" depends="compile">
+		<jar jarfile="rotofight.jar" basedir="${basedir}/classes">
+			<manifest>
+			      <attribute name = "Main-Class" value = "fr.umlv.roto.Game"/>
+				  <attribute name="Class-Path" value="lib/zen5.jar"/>
+			   </manifest>
+		</jar>
+	</target> 
+	
+</project>
