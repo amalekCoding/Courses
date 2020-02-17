@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Quarkus REST service</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/wingcss/0.1.8/wing.min.css"/>
+    <!-- Load AngularJS -->
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script type="text/javascript">
+      const app = angular.module("Retro", []);
+
+      app.controller("RetroController", function ($scope, $http) {
+
+        //Initialize page with empty data
+        $scope.msgs = [];
+        $scope.options = [];
+
+
+        $scope.form = {
+          info: "",
+          path: ""
+        };
+
+        //Now load the data from server
+        _refreshPageData();
+
+        $scope.add = function () {
+
+          if($scope.options.indexOf("-info") === -1) {
+            $scope.options.push("-info");
+          }
+
+          if($scope.form.path !== '') {
+            $scope.options.push($scope.form.path);
+          }
+
+
+          if($scope.form.path !== '') {
+
+              const data = {"args": $scope.options.join(" ") };
+              try {
+              $http({
+                method: "POST",
+                url: '/retro',
+                data: angular.toJson(data),
+                headers: {
+                  'Content-Type': 'application/json'
+                }
+              }).then(_success, _error);
+            } catch(error) {
+                console.error(error);
+
+            }
+
+
+
+          }
+        };
+
+        function _refreshPageData() {
+          if($scope.form.path !== '') {
+              $http({
+                method: 'GET',
+                url: '/retro',
+              }).then(function successCallback(response) {
+                $scope.msgs = response.data;
+              }, function errorCallback(response) {
+                  console.log(response.statusText);
+                  _clearForm();
+              });
+          }
+        }
+
+        function _success(response) {
+          _refreshPageData();
+          _clearForm();
+        }
+
+        function _error(response) {
+          alert(response.data.message || response.statusText);
+          _clearForm();
+        }
+
+
+        //Clear the form
+        function _clearForm() {
+          $scope.form.info = "";
+          $scope.form.path = "";
+          $scope.options = [];
+          $scope.msgs = [];
+        }
+      });
+    </script>
+</head>
+
+<body ng-app="Retro" ng-controller="RetroController">
+
+  <div class="container">
+    <h1>Retro</h1>
+
+    <form ng-submit="add()">
+        <div>
+          <input type="checkbox" id="info" name="info" onclick="return false;"/ checked="True">
+          <label for="info">Info</label>
+        </div>
+
+        <div class="row">
+            <div class="col-6"><input type="text" placeholder="Path" ng-model="form.path" size="60"/></div>
+        </div>
+        <input type="submit" value="SUBMIT"/>
+    </form>
+
+    <h3>Features Info : </h3>
+    <div class="row" ng-repeat="msgFeature in msgs">
+        <div class="col-12">{{ msgFeature }}</div>
+
+    </div>
+  </div>
+
+</body>
+</html>
